@@ -1,0 +1,88 @@
+<?php
+/**
+ * @file
+ * Code for the Flag clear module.
+ */
+
+/*
+* Implements hook_menu().
+*/
+function flag_clear_menu() {
+  // Remove all user flags for a peice of content.
+  $items['unflag/%'] = array(
+    'title' => 'Unflag this content completely',
+    'page arguments' => array(1),
+    'page callback' => 'flag_clear_clear',
+    'access callback' => 'user_access',
+    'access arguments' => array('administer flags'),
+    'description' => '',
+    'type' => MENU_CALLBACK,
+  );
+  // Remove a user's flag for a peice of content.
+  $items['unflag/user/%/%/%'] = array(
+    'title' => 'Unflag this content',
+    'page arguments' => array(2, 3, 4),
+    'page callback' => 'flag_clear_unflag',
+    'access callback' => 'user_access',
+    'access arguments' => array('administer flags'),
+    'description' => '',
+    'type' => MENU_CALLBACK,
+  );
+  return $items;
+}
+
+/*
+* Menu callback for completely unflagging a peice of content for all users.
+*/
+function flag_clear_clear($entity = NULL) {
+  $user_flags = flag_get_entity_flags('node', $entity);
+  foreach ($user_flags as $user_flag) {
+    $key = key($user_flag);
+    $user = user_load($user_flag[$key]->uid);
+    $flag = flag_get_flag($key);
+    $flag->flag('unflag', $entity, $user, TRUE);
+    drupal_set_message(
+      t('Unflagged "@flag" for entity #@entity by @user',
+        array(
+          '@flag' => $flag->title,
+          '@entity' => $entity,
+          '@user' => $user->name
+        )
+      )
+    );
+  }
+  // Redirect to the entity that has been unflagged.
+  $destination = isset($_REQUEST['destination']) ? $_REQUEST['destination'] : 'node/' . $entity;
+  drupal_goto($destination);
+}
+
+/*
+* Menu callback for unflagging a peice of content for a specific user.
+*/
+function flag_clear_unflag($flag = NULL, $entity = NULL, $uid = NULL) {
+  $user = user_load($uid);
+  $flag = flag_get_flag($flag);
+  $flag->flag('unflag', $entity, $user, TRUE);
+  drupal_set_message(
+    t('Unflagged "@flag" for entity #@entity by @user',
+      array(
+        '@flag' => $flag->title,
+        '@entity' => $entity,
+        '@user' => $user->name
+      )
+    )
+  );
+  // Redirect to the entity that has been unflagged.
+  $destination = isset($_REQUEST['destination']) ? $_REQUEST['destination'] : 'node/' . $entity;
+  drupal_goto($destination);
+}
+
+/**
+ * Implements hook_views_api().
+ */
+function flag_clear_views_api() {
+  return array(
+    'api' => 3.0,
+    'path' => drupal_get_path('module', 'flag_clear') . '/includes/views',
+  );
+}
