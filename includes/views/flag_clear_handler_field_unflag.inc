@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains the flag unlink field handler.
+ * Contains the flag clearing field handler.
  */
 
 /**
