@@ -14,7 +14,7 @@ function flag_clear_menu() {
     'page arguments' => array(1),
     'page callback' => 'flag_clear_clear',
     'access callback' => 'user_access',
-    'access arguments' => array('administer flags'),
+    'access arguments' => array('clear flags'),
     'description' => '',
     'type' => MENU_CALLBACK,
   );
@@ -29,6 +29,18 @@ function flag_clear_menu() {
     'type' => MENU_CALLBACK,
   );
   return $items;
+}
+
+/*
+* Implements hook_permission()
+*/
+function flag_clear_permission() {
+  return array(
+    'clear flags' => array(
+      'title' => t('Clear flags'),
+      'description' => t('Clear all flags on entity'),
+    ),
+  );
 }
 
 /*
