@@ -55,7 +55,6 @@ function flag_clear_views_default_views() {
   $handler->display->display_options['relationships']['flag_content_rel']['id'] = 'flag_content_rel';
   $handler->display->display_options['relationships']['flag_content_rel']['table'] = 'node';
   $handler->display->display_options['relationships']['flag_content_rel']['field'] = 'flag_content_rel';
-  $handler->display->display_options['relationships']['flag_content_rel']['flag'] = 'node_flag';
   $handler->display->display_options['relationships']['flag_content_rel']['user_scope'] = 'any';
   /* Relationship: Flags: User */
   $handler->display->display_options['relationships']['uid']['id'] = 'uid';
@@ -130,7 +129,13 @@ function flag_clear_views_default_views() {
 
   /* Display: Content */
   $handler = $view->new_display('page', 'Flagged content', 'flagged_content');
-  $handler->display->display_options['path'] = 'admin/config/content/flag-manager';
+  $handler->display->display_options['path'] = 'admin/config/content/flag-manager/content';
+  $handler->display->display_options['menu']['type'] = 'normal';
+  $handler->display->display_options['menu']['title'] = 'Flagged content';
+  $handler->display->display_options['menu']['weight'] = '0';
+  $handler->display->display_options['menu']['name'] = 'management';
+  $handler->display->display_options['menu']['context'] = 0;
+  $handler->display->display_options['menu']['context_only_inline'] = 0;
   $export['flag_manager'] = $view;
 
   // User flag manager.
@@ -160,7 +165,6 @@ function flag_clear_views_default_views() {
   $handler->display->display_options['relationships']['flag_content_rel']['id'] = 'flag_content_rel';
   $handler->display->display_options['relationships']['flag_content_rel']['table'] = 'users';
   $handler->display->display_options['relationships']['flag_content_rel']['field'] = 'flag_content_rel';
-  $handler->display->display_options['relationships']['flag_content_rel']['flag'] = 'user_flag';
   $handler->display->display_options['relationships']['flag_content_rel']['user_scope'] = 'any';
   /* Relationship: Flags: User */
   $handler->display->display_options['relationships']['uid']['id'] = 'uid';
@@ -214,6 +218,12 @@ function flag_clear_views_default_views() {
   /* Display: Flag manager - Users */
   $handler = $view->new_display('page', 'Flag users', 'flagged_users');
   $handler->display->display_options['path'] = 'admin/config/content/flag-manager/users';
+  $handler->display->display_options['menu']['type'] = 'normal';
+  $handler->display->display_options['menu']['title'] = 'Flagged users';
+  $handler->display->display_options['menu']['weight'] = '0';
+  $handler->display->display_options['menu']['name'] = 'management';
+  $handler->display->display_options['menu']['context'] = 0;
+  $handler->display->display_options['menu']['context_only_inline'] = 0;
   $export['flag_manager_users'] = $view;
 
   // Comment flag manager.
@@ -248,7 +258,6 @@ function flag_clear_views_default_views() {
   $handler->display->display_options['relationships']['flag_content_rel']['id'] = 'flag_content_rel';
   $handler->display->display_options['relationships']['flag_content_rel']['table'] = 'comment';
   $handler->display->display_options['relationships']['flag_content_rel']['field'] = 'flag_content_rel';
-  $handler->display->display_options['relationships']['flag_content_rel']['flag'] = 'comment_flag';
   $handler->display->display_options['relationships']['flag_content_rel']['user_scope'] = 'any';
   /* Relationship: Flags: User */
   $handler->display->display_options['relationships']['uid']['id'] = 'uid';
@@ -329,6 +338,12 @@ function flag_clear_views_default_views() {
   /* Display: Flag manager - Comments */
   $handler = $view->new_display('page', 'Flag manager - Comments', 'flagged_comments');
   $handler->display->display_options['path'] = 'admin/config/content/flag-manager/comments';
+  $handler->display->display_options['menu']['type'] = 'normal';
+  $handler->display->display_options['menu']['title'] = 'Flagged comments';
+  $handler->display->display_options['menu']['weight'] = '0';
+  $handler->display->display_options['menu']['name'] = 'management';
+  $handler->display->display_options['menu']['context'] = 0;
+  $handler->display->display_options['menu']['context_only_inline'] = 0;
   $export['flag_manager_comments'] = $view;
 
   return $export;

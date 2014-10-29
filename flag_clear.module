@@ -24,9 +24,16 @@ function flag_clear_menu() {
     'page arguments' => array(2, 3, 4),
     'page callback' => 'flag_clear_unflag',
     'access callback' => 'user_access',
-    'access arguments' => array('administer flags'),
+    'access arguments' => array('clear flags'),
     'description' => '',
     'type' => MENU_CALLBACK,
+  );
+  $items['admin/config/content/flag-manager'] = array(
+    'title' => 'Flag Manager',
+    'description' => 'Manage flags for content',
+    'page callback' => 'drupal_goto',
+    'page arguments' => array('admin/config/content/flag-manager/content'),
+    'access arguments' => array('clear flags'),
   );
   return $items;
 }
