@@ -153,11 +153,14 @@ class flag_clear_handler_field_unflag extends views_handler_field {
       // Flag does not apply to this content.
       return;
     }
-
+    $types = array(
+      'nid' => 'node',
+      'uid' => 'user'
+    );
     $current_path = current_path();
     $unflag_text = $this->options['link_text'];
     $unflag_query = array('destination' => $current_path);
-    $unflag_link = l($unflag_text, 'unflag/' . $entity_id, array('query' => $unflag_query));
+    $unflag_link = l($unflag_text, 'unflag/' . $types[$this->aliases['entity_id']] . '/' . $entity_id, array('query' => $unflag_query));
     return $unflag_link;
   }
 }
