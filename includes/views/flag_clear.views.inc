@@ -44,6 +44,7 @@ function flag_clear_views_default_views() {
   $handler->display->display_options['title'] = 'Flag manager';
   $handler->display->display_options['use_more_always'] = FALSE;
   $handler->display->display_options['access']['type'] = 'perm';
+  $handler->display->display_options['access']['perm'] = 'administer flags';
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
   $handler->display->display_options['exposed_form']['type'] = 'basic';
@@ -128,8 +129,8 @@ function flag_clear_views_default_views() {
   );
 
   /* Display: Content */
-  $handler = $view->new_display('page', 'Content', 'page');
-  $handler->display->display_options['path'] = 'flag-manager';
+  $handler = $view->new_display('page', 'Flagged content', 'flagged_content');
+  $handler->display->display_options['path'] = 'admin/config/content/flag-manager';
   $export['flag_manager'] = $view;
 
   return $export;
