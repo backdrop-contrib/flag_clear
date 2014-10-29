@@ -8,7 +8,7 @@
 * Implements hook_menu().
 */
 function flag_clear_menu() {
-  // Remove all user flags for a peice of content.
+  // Remove all user flags for a piece of content.
   $items['unflag/%'] = array(
     'title' => 'Unflag this content completely',
     'page arguments' => array(1),
@@ -18,7 +18,7 @@ function flag_clear_menu() {
     'description' => '',
     'type' => MENU_CALLBACK,
   );
-  // Remove a user's flag for a peice of content.
+  // Remove a user's flag for a piece of content.
   $items['unflag/user/%/%/%'] = array(
     'title' => 'Unflag this content',
     'page arguments' => array(2, 3, 4),
@@ -44,7 +44,7 @@ function flag_clear_permission() {
 }
 
 /*
-* Menu callback for completely unflagging a peice of content for all users.
+* Menu callback for completely unflagging a piece of content for all users.
 */
 function flag_clear_clear($entity = NULL) {
   $user_flags = flag_get_entity_flags('node', $entity);
@@ -69,7 +69,7 @@ function flag_clear_clear($entity = NULL) {
 }
 
 /*
-* Menu callback for unflagging a peice of content for a specific user.
+* Menu callback for unflagging a piece of content for a specific user.
 */
 function flag_clear_unflag($flag = NULL, $entity = NULL, $uid = NULL) {
   $user = user_load($uid);
