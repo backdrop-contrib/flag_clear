@@ -146,6 +146,11 @@ class flag_clear_handler_field_unflag extends views_handler_field {
       return t('Missing flag'); // get_flag() itself will print a more detailed message.
     }
 
+    $types = array(
+      'cid' => 'comment',
+      'nid' => 'node',
+      'uid' => 'user'
+    );
     $entity_id = $values->{$this->aliases['entity_id']};
     $is_flagged = $values->{$this->aliases['is_flagged']};
 
@@ -153,10 +158,7 @@ class flag_clear_handler_field_unflag extends views_handler_field {
       // Flag does not apply to this content.
       return;
     }
-    $types = array(
-      'nid' => 'node',
-      'uid' => 'user'
-    );
+
     $current_path = current_path();
     $unflag_text = $this->options['link_text'];
     $unflag_query = array('destination' => $current_path);
