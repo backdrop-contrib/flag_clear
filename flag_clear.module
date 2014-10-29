@@ -9,9 +9,9 @@
 */
 function flag_clear_menu() {
   // Remove all user flags for a piece of content.
-  $items['unflag/%'] = array(
+  $items['unflag/%/%'] = array(
     'title' => 'Unflag this content completely',
-    'page arguments' => array(1),
+    'page arguments' => array(1, 2),
     'page callback' => 'flag_clear_clear',
     'access callback' => 'user_access',
     'access arguments' => array('clear flags'),
@@ -46,8 +46,8 @@ function flag_clear_permission() {
 /*
 * Menu callback for completely unflagging a piece of content for all users.
 */
-function flag_clear_clear($entity = NULL) {
-  $user_flags = flag_get_entity_flags('node', $entity);
+function flag_clear_clear($type = NULL, $entity = NULL) {
+  $user_flags = flag_get_entity_flags($type, $entity);
   foreach ($user_flags as $user_flag) {
     $key = key($user_flag);
     $user = user_load($user_flag[$key]->uid);
@@ -64,7 +64,7 @@ function flag_clear_clear($entity = NULL) {
     );
   }
   // Redirect to the entity that has been unflagged.
-  $destination = isset($_REQUEST['destination']) ? $_REQUEST['destination'] : 'node/' . $entity;
+  $destination = isset($_REQUEST['destination']) ? $_REQUEST['destination'] : $type . '/' . $entity;
   drupal_goto($destination);
 }
 
