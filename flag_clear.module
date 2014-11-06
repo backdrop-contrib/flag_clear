@@ -31,15 +31,14 @@ function flag_clear_menu() {
   $items['admin/config/content/flag-manager'] = array(
     'title' => 'Flag Manager',
     'description' => 'Manage flags for content',
-    'page callback' => 'drupal_goto',
-    'page arguments' => array('admin/config/content/flag-manager/content'),
+    'page callback' => 'flag_clear_manager',
     'access arguments' => array('clear flags'),
   );
   return $items;
 }
 
 /*
-* Implements hook_permission()
+* Implements hook_permission().
 */
 function flag_clear_permission() {
   return array(
@@ -48,6 +47,43 @@ function flag_clear_permission() {
       'description' => t('Clear all flags on entity'),
     ),
   );
+}
+
+/*
+* Custom menu handler for Flag manager landing page.
+*/
+function flag_clear_manager() {
+  $output = '';
+  $flags = flag_get_flags();
+  $flag_links = array();
+  foreach ($flags as $flag) {
+    if (!isset($flag_links[$flag->entity_type])) {
+      $flag_links[$flag->entity_type] = array();
+    }
+    $flag_links[$flag->entity_type][$flag->fid] = $flag->title;
+  }
+
+  $flag_paths = array(
+    'comment' => 'admin/config/content/flag-manager/comments',
+    'node' => 'admin/config/content/flag-manager/content',
+    'user' => 'admin/config/content/flag-manager/users',
+  );
+  foreach ($flag_links as $type => $flag_link) {
+    $output .= '
+    <div class="admin-panel">
+      <h3>' . l(ucwords($type) . ' flags', $flag_paths[$type]) . '</h3>
+      <div class="body">
+        <ul class="admin-list">';
+    foreach ($flag_link as $key => $title) {
+      $output .= '<li class="leaf">' . l($title, $flag_paths[$type] . '/' . $key) . '</li>';
+    }
+    $output .= '
+        </ul>
+      </div>
+    </div>';
+  }
+
+  return $output;
 }
 
 /*
