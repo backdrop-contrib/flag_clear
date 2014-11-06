@@ -6,4 +6,5 @@ dependencies[] = flag
 dependencies[] = views
 
 ; Views
+files[] = includes/views/flag_clear_handler_field_clear.inc
 files[] = includes/views/flag_clear_handler_field_unflag.inc

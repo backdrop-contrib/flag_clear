@@ -11,10 +11,18 @@
 function flag_clear_views_data() {
   $data = array();
 
+  // Clear flags content links.
+  $data['flagging']['clear_link'] = array(
+    'title' => t('Clear flags'),
+    'help' => t('Clear all flags for this entity.'),
+    'field' => array(
+      'handler' => 'flag_clear_handler_field_clear',
+    ),
+  );
   // Unflag content links.
-  $data['flagging']['clear'] = array(
-    'title' => t('Clear flag link'),
-    'help' => t('Display flag clearing link.'),
+  $data['flagging']['unflag_link'] = array(
+    'title' => t('Unflag'),
+    'help' => t('Unflag this entity for a specific user. (Requires Username/UID field)'),
     'field' => array(
       'handler' => 'flag_clear_handler_field_unflag',
     ),
@@ -83,13 +91,21 @@ function flag_clear_views_default_views() {
     $handler->display->display_options['fields']['name']['label'] = 'User';
     $handler->display->display_options['fields']['name']['element_label_colon'] = FALSE;
     /* Field: Flags: Clear flag link */
-    $handler->display->display_options['fields']['clear']['id'] = 'clear';
-    $handler->display->display_options['fields']['clear']['table'] = 'flagging';
-    $handler->display->display_options['fields']['clear']['field'] = 'clear';
-    $handler->display->display_options['fields']['clear']['relationship'] = 'flag_content_rel';
-    $handler->display->display_options['fields']['clear']['label'] = 'Clear all flags';
-    $handler->display->display_options['fields']['clear']['element_label_colon'] = FALSE;
-    $handler->display->display_options['fields']['clear']['link_text'] = 'Clear flags';
+    $handler->display->display_options['fields']['clear_link']['id'] = 'clear_link';
+    $handler->display->display_options['fields']['clear_link']['table'] = 'flagging';
+    $handler->display->display_options['fields']['clear_link']['field'] = 'clear_link';
+    $handler->display->display_options['fields']['clear_link']['relationship'] = 'flag_content_rel';
+    $handler->display->display_options['fields']['clear_link']['label'] = 'Clear all flags';
+    $handler->display->display_options['fields']['clear_link']['element_label_colon'] = FALSE;
+    $handler->display->display_options['fields']['clear_link']['link_text'] = 'Clear flags';
+    /* Field: Flags: Unflag link */
+    $handler->display->display_options['fields']['unflag_link']['id'] = 'unflag_link';
+    $handler->display->display_options['fields']['unflag_link']['table'] = 'flagging';
+    $handler->display->display_options['fields']['unflag_link']['field'] = 'unflag_link';
+    $handler->display->display_options['fields']['unflag_link']['relationship'] = 'flag_content_rel';
+    $handler->display->display_options['fields']['unflag_link']['label'] = 'Unflag';
+    $handler->display->display_options['fields']['unflag_link']['element_label_colon'] = FALSE;
+    $handler->display->display_options['fields']['unflag_link']['link_text'] = 'Unflag';
     /* Field: Flags: Flagged time */
     $handler->display->display_options['fields']['timestamp']['id'] = 'timestamp';
     $handler->display->display_options['fields']['timestamp']['table'] = 'flagging';
@@ -216,13 +232,21 @@ function flag_clear_views_default_views() {
     $handler->display->display_options['fields']['name_1']['label'] = 'Flagged by';
     $handler->display->display_options['fields']['name_1']['element_label_colon'] = FALSE;
     /* Field: Flags: Clear flag link */
-    $handler->display->display_options['fields']['clear']['id'] = 'clear';
-    $handler->display->display_options['fields']['clear']['table'] = 'flagging';
-    $handler->display->display_options['fields']['clear']['field'] = 'clear';
-    $handler->display->display_options['fields']['clear']['relationship'] = 'flag_content_rel';
-    $handler->display->display_options['fields']['clear']['label'] = 'Clear all flags';
-    $handler->display->display_options['fields']['clear']['element_label_colon'] = FALSE;
-    $handler->display->display_options['fields']['clear']['link_text'] = 'Clear flags';
+    $handler->display->display_options['fields']['clear_link']['id'] = 'clear_link';
+    $handler->display->display_options['fields']['clear_link']['table'] = 'flagging';
+    $handler->display->display_options['fields']['clear_link']['field'] = 'clear_link';
+    $handler->display->display_options['fields']['clear_link']['relationship'] = 'flag_content_rel';
+    $handler->display->display_options['fields']['clear_link']['label'] = 'Clear all flags';
+    $handler->display->display_options['fields']['clear_link']['element_label_colon'] = FALSE;
+    $handler->display->display_options['fields']['clear_link']['link_text'] = 'Clear flags';
+    /* Field: Flags: Unflag link */
+    $handler->display->display_options['fields']['unflag_link']['id'] = 'unflag_link';
+    $handler->display->display_options['fields']['unflag_link']['table'] = 'flagging';
+    $handler->display->display_options['fields']['unflag_link']['field'] = 'unflag_link';
+    $handler->display->display_options['fields']['unflag_link']['relationship'] = 'flag_content_rel';
+    $handler->display->display_options['fields']['unflag_link']['label'] = 'Unflag';
+    $handler->display->display_options['fields']['unflag_link']['element_label_colon'] = FALSE;
+    $handler->display->display_options['fields']['unflag_link']['link_text'] = 'Unflag';
     /* Sort criterion: User: Created date */
     $handler->display->display_options['sorts']['created']['id'] = 'created';
     $handler->display->display_options['sorts']['created']['table'] = 'users';
@@ -334,13 +358,21 @@ function flag_clear_views_default_views() {
     $handler->display->display_options['fields']['name']['label'] = 'User';
     $handler->display->display_options['fields']['name']['element_label_colon'] = FALSE;
     /* Field: Flags: Clear flag link */
-    $handler->display->display_options['fields']['clear']['id'] = 'clear';
-    $handler->display->display_options['fields']['clear']['table'] = 'flagging';
-    $handler->display->display_options['fields']['clear']['field'] = 'clear';
-    $handler->display->display_options['fields']['clear']['relationship'] = 'flag_content_rel';
-    $handler->display->display_options['fields']['clear']['label'] = 'Clear all flags';
-    $handler->display->display_options['fields']['clear']['element_label_colon'] = FALSE;
-    $handler->display->display_options['fields']['clear']['link_text'] = 'Clear flags';
+    $handler->display->display_options['fields']['clear_link']['id'] = 'clear_link';
+    $handler->display->display_options['fields']['clear_link']['table'] = 'flagging';
+    $handler->display->display_options['fields']['clear_link']['field'] = 'clear_link';
+    $handler->display->display_options['fields']['clear_link']['relationship'] = 'flag_content_rel';
+    $handler->display->display_options['fields']['clear_link']['label'] = 'Clear all flags';
+    $handler->display->display_options['fields']['clear_link']['element_label_colon'] = FALSE;
+    $handler->display->display_options['fields']['clear_link']['link_text'] = 'Clear flags';
+    /* Field: Flags: Unflag link */
+    $handler->display->display_options['fields']['unflag_link']['id'] = 'unflag_link';
+    $handler->display->display_options['fields']['unflag_link']['table'] = 'flagging';
+    $handler->display->display_options['fields']['unflag_link']['field'] = 'unflag_link';
+    $handler->display->display_options['fields']['unflag_link']['relationship'] = 'flag_content_rel';
+    $handler->display->display_options['fields']['unflag_link']['label'] = 'Unflag';
+    $handler->display->display_options['fields']['unflag_link']['element_label_colon'] = FALSE;
+    $handler->display->display_options['fields']['unflag_link']['link_text'] = 'Unflag';
     /* Field: Flags: Flagged time */
     $handler->display->display_options['fields']['timestamp']['id'] = 'timestamp';
     $handler->display->display_options['fields']['timestamp']['table'] = 'flagging';

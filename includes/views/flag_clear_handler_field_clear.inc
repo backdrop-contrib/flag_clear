@@ -10,7 +10,7 @@
  *
  * @ingroup views
  */
-class flag_clear_handler_field_unflag extends views_handler_field {
+class flag_clear_handler_field_clear extends views_handler_field {
 
   /**
    * Returns the flag object associated with our field.
@@ -44,7 +44,7 @@ class flag_clear_handler_field_unflag extends views_handler_field {
 
   function option_definition() {
     $options = parent::option_definition();
-    $options['link_text'] = array('default' => 'Unflag');
+    $options['link_text'] = array('default' => 'Clear flags');
     return $options;
   }
 
@@ -159,26 +159,10 @@ class flag_clear_handler_field_unflag extends views_handler_field {
       return;
     }
 
-    if (isset($values->users_flagging_uid)) {
-      $unflag_user = $values->users_flagging_uid;
-    }
-    elseif (isset($values->flagging_node_uid)) {
-      $unflag_user = $values->flagging_node_uid;
-    }
-    elseif (isset($values->flagging_comment_uid)) {
-      $unflag_user = $values->flagging_comment_uid;
-    }
-    elseif (isset($values->flagging_user_uid)) {
-      $unflag_user = $values->flagging_user_uid;
-    }
-    else {
-      return t('Unflag link requires username or uid field in view output.');
-    }
-
     $current_path = current_path();
-    $unflag_text = $this->options['link_text'];
-    $unflag_query = array('destination' => $current_path);
-    $unflag_link = l($unflag_text, 'unflag/user/' . $flag->name . '/' . $entity_id . '/' . $unflag_user, array('query' => $unflag_query));
-    return $unflag_link;
+    $clear_text = $this->options['link_text'];
+    $clear_query = array('destination' => $current_path);
+    $clear_link = l($clear_text, 'unflag/' . $types[$this->aliases['entity_id']] . '/' . $entity_id, array('query' => $clear_query));
+    return $clear_link;
   }
 }
