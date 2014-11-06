@@ -83,6 +83,18 @@ function flag_clear_manager() {
     </div>';
   }
 
+  if (empty($output)) {
+    $output = '
+    <div class="admin-panel">
+      <h3>' . t('No flags exist') . '</h3>
+      <div class="body">
+        <ul class="admin-list">
+          <li class="leaf">' . l(t('Create a new flag'), 'admin/structure/flags/add') . '</li>
+        </ul>
+      </div>
+    </div>';
+  }
+
   return $output;
 }
 
