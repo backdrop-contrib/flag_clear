@@ -54,30 +54,50 @@ function flag_clear_permission() {
 * Menu callback for completely unflagging a piece of content for all users.
 */
 function flag_clear_clear($type = NULL, $entity = NULL) {
-  $user_flags = flag_get_entity_flags($type, $entity);
-  foreach ($user_flags as $user_flag) {
-    $key = key($user_flag);
-    $uid = $user_flag[$key]->uid;
-    $user = user_load($uid);
-    $flag = flag_get_flag($key);
-    if ($user->uid > 0) {
-      $flag->flag('unflag', $entity, $user, TRUE);
+  $removed = array();
+  // This while loop is necessary due to flag_get_entity_flags functionality.
+  // It returns an array with uids as keys, so only 1 anonymous flag per call.
+  while ($user_flags = flag_get_entity_flags($type, $entity)) {
+    if (empty($user_flags)) {
+      break;
     }
-    else {
-      $user->name = 'Anonymous';
-      $result = db_query('DELETE FROM {flagging} WHERE flagging_id = :fid', array(':fid' => $user_flag[$key]->flagging_id));
-    }
-    drupal_set_message(
-      t('Unflagged "@flag" for @type #@entity by @user',
-        array(
-          '@flag' => $flag->title,
-          '@type' => $type,
-          '@entity' => $entity,
-          '@user' => $user->name
+    foreach ($user_flags as $user_flag) {
+      $key = key($user_flag);
+      $uid = $user_flag[$key]->uid;
+      // Flag module will often continue to return results that were already removed.
+      if (in_array($user_flag[$key]->flagging_id, $removed)) {
+        break 2;
+      }
+      $user = user_load($uid);
+      $flag = flag_get_flag($key);
+      if ($user->uid > 0) {
+        $flag->flag('unflag', $entity, $user, TRUE);
+      }
+      else {
+        $user->name = 'Anonymous';
+        // This is necessary until the flag module allows admin users to unflag anonymous flags.
+        $result = db_query('DELETE FROM {flagging} WHERE flagging_id = :fid', array(':fid' => $user_flag[$key]->flagging_id));
+        $result = db_query('UPDATE {flag_counts} SET count = count - 1 WHERE fid = :fid AND entity_id = :eid',
+          array(
+            ':fid' => $flag->fid,
+            ':eid' => $entity
+          )
+        );
+      }
+      $removed[] = $user_flag[$key]->flagging_id;
+      drupal_set_message(
+        t('Unflagged "@flag" for @type #@entity by @user',
+          array(
+            '@flag' => $flag->title,
+            '@type' => $type,
+            '@entity' => $entity,
+            '@user' => $user->name
+          )
         )
-      )
-    );
+      );
+    }
   }
+
   // Redirect to the entity that has been unflagged.
   $destination = isset($_REQUEST['destination']) ? $_REQUEST['destination'] : $type . '/' . $entity;
   drupal_goto($destination);
