@@ -57,9 +57,16 @@ function flag_clear_clear($type = NULL, $entity = NULL) {
   $user_flags = flag_get_entity_flags($type, $entity);
   foreach ($user_flags as $user_flag) {
     $key = key($user_flag);
-    $user = user_load($user_flag[$key]->uid);
+    $uid = $user_flag[$key]->uid;
+    $user = user_load($uid);
     $flag = flag_get_flag($key);
-    $flag->flag('unflag', $entity, $user, TRUE);
+    if ($user->uid > 0) {
+      $flag->flag('unflag', $entity, $user, TRUE);
+    }
+    else {
+      $user->name = 'Anonymous';
+      $result = db_query('DELETE FROM {flagging} WHERE flagging_id = :fid', array(':fid' => $user_flag[$key]->flagging_id));
+    }
     drupal_set_message(
       t('Unflagged "@flag" for entity #@entity by @user',
         array(
