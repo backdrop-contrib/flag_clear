@@ -68,9 +68,10 @@ function flag_clear_clear($type = NULL, $entity = NULL) {
       $result = db_query('DELETE FROM {flagging} WHERE flagging_id = :fid', array(':fid' => $user_flag[$key]->flagging_id));
     }
     drupal_set_message(
-      t('Unflagged "@flag" for entity #@entity by @user',
+      t('Unflagged "@flag" for @type #@entity by @user',
         array(
           '@flag' => $flag->title,
+          '@type' => $type,
           '@entity' => $entity,
           '@user' => $user->name
         )
