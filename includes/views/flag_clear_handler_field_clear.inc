@@ -159,10 +159,11 @@ class flag_clear_handler_field_clear extends views_handler_field {
       return;
     }
 
+    $token = drupal_get_token();
     $current_path = current_path();
     $clear_text = $this->options['link_text'];
     $clear_query = array('destination' => $current_path);
-    $clear_link = l($clear_text, 'unflag/' . $types[$this->aliases['entity_id']] . '/' . $entity_id, array('query' => $clear_query));
+    $clear_link = l($clear_text, 'unflag/' . $types[$this->aliases['entity_id']] . '/' . $entity_id . '/' . $token, array('query' => $clear_query));
     return $clear_link;
   }
 }

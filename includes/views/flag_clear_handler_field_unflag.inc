@@ -175,10 +175,11 @@ class flag_clear_handler_field_unflag extends views_handler_field {
       return t('Unflag link requires username or uid field in view output.');
     }
 
+    $token = drupal_get_token();
     $current_path = current_path();
     $unflag_text = $this->options['link_text'];
     $unflag_query = array('destination' => $current_path);
-    $unflag_link = l($unflag_text, 'unflag/user/' . $flag->name . '/' . $entity_id . '/' . $unflag_user, array('query' => $unflag_query));
+    $unflag_link = l($unflag_text, 'unflag/user/' . $flag->name . '/' . $entity_id . '/' . $unflag_user . '/' . $token, array('query' => $unflag_query));
     return $unflag_link;
   }
 }

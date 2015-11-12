@@ -11,7 +11,7 @@ function flag_clear_menu() {
   // Remove all user flags for a piece of content.
   $items['unflag/%/%'] = array(
     'title' => 'Unflag this content completely',
-    'page arguments' => array(1, 2),
+    'page arguments' => array(1, 2, 3),
     'page callback' => 'flag_clear_clear',
     'access callback' => 'user_access',
     'access arguments' => array('clear flags'),
@@ -19,9 +19,9 @@ function flag_clear_menu() {
     'type' => MENU_CALLBACK,
   );
   // Remove a user's flag for a piece of content.
-  $items['unflag/user/%/%/%'] = array(
+  $items['unflag/user/%/%/%/%'] = array(
     'title' => 'Unflag this content',
-    'page arguments' => array(2, 3, 4),
+    'page arguments' => array(2, 3, 4, 5),
     'page callback' => 'flag_clear_unflag',
     'access callback' => 'user_access',
     'access arguments' => array('clear flags'),
@@ -101,7 +101,8 @@ function flag_clear_manager() {
 /*
 * Menu callback for completely unflagging a piece of content for all users.
 */
-function flag_clear_clear($type = NULL, $entity = NULL) {
+function flag_clear_clear($type = NULL, $entity = NULL, $token = NULL) {
+  flag_clear_verify_token($token);
   $removed = array();
   $user_flags = flag_get_entity_flags($type, $entity);
   foreach ($user_flags as $user_flag) {
@@ -131,7 +132,8 @@ function flag_clear_clear($type = NULL, $entity = NULL) {
 /*
 * Menu callback for unflagging a piece of content for a specific user.
 */
-function flag_clear_unflag($flag = NULL, $entity = NULL, $uid = NULL) {
+function flag_clear_unflag($flag = NULL, $entity = NULL, $uid = NULL, $token = NULL) {
+  flag_clear_verify_token($token);
   $user = user_load($uid);
   $flag = flag_get_flag($flag);
   $flag->flag('unflag', $entity, $user, TRUE);
@@ -147,6 +149,15 @@ function flag_clear_unflag($flag = NULL, $entity = NULL, $uid = NULL) {
   // Redirect to the entity that has been unflagged.
   $destination = isset($_REQUEST['destination']) ? $_REQUEST['destination'] : 'node/' . $entity;
   drupal_goto($destination);
+}
+
+function flag_clear_verify_token($token) {
+  if ($token != drupal_get_token()){
+    drupal_set_message(t('Token does not match URL Token'), 'error');
+    drupal_exit();
+  }
+
+  return TRUE;
 }
 
 /**
