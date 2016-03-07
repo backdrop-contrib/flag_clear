@@ -163,6 +163,7 @@ function flag_clear_views_default_views() {
     foreach ($node_flags as $node_flag) {
       /* Display: Content */
       $handler = $view->new_display('page', 'Flagged content - ' . $node_flag->title, 'flagged_content_' . $node_flag->fid);
+      $handler->display->display_options['defaults']['relationships'] = FALSE;
       $handler->display->display_options['path'] = 'admin/config/content/flag-manager/content/' . $node_flag->fid;
       $handler->display->display_options['menu']['type'] = 'normal';
       $handler->display->display_options['menu']['title'] = 'Flagged content - ' . $node_flag->title;
@@ -174,8 +175,14 @@ function flag_clear_views_default_views() {
       $handler->display->display_options['relationships']['flag_content_rel']['id'] = 'flag_content_rel';
       $handler->display->display_options['relationships']['flag_content_rel']['table'] = 'node';
       $handler->display->display_options['relationships']['flag_content_rel']['field'] = 'flag_content_rel';
-      $handler->display->display_options['relationships']['flag_content_rel']['flag'] = $node_flag->fid;
+      $handler->display->display_options['relationships']['flag_content_rel']['flag'] = $node_flag->name;
       $handler->display->display_options['relationships']['flag_content_rel']['user_scope'] = 'any';
+      /* Relationship: Flags: User */
+      $handler->display->display_options['relationships']['uid']['id'] = 'uid';
+      $handler->display->display_options['relationships']['uid']['table'] = 'flagging';
+      $handler->display->display_options['relationships']['uid']['field'] = 'uid';
+      $handler->display->display_options['relationships']['uid']['relationship'] = 'flag_content_rel';
+      $handler->display->display_options['relationships']['uid']['required'] = TRUE;
       $export['flag_manager'] = $view;
     }
   }
