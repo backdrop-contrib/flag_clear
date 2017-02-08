@@ -9,22 +9,22 @@
 */
 function flag_clear_menu() {
   // Remove all user flags for a piece of content.
-  $items['unflag/%/%'] = array(
+  $items['unflag/%/%/%'] = array(
     'title' => 'Unflag this content completely',
-    'page arguments' => array(1, 2, 3),
+    'page arguments' => array(1, 2),
     'page callback' => 'flag_clear_clear',
-    'access callback' => 'user_access',
-    'access arguments' => array('clear flags'),
+    'access callback' => 'flag_clear_access',
+    'access arguments' => array(2, 3),
     'description' => '',
     'type' => MENU_CALLBACK,
   );
   // Remove a user's flag for a piece of content.
   $items['unflag/user/%/%/%/%'] = array(
     'title' => 'Unflag this content',
-    'page arguments' => array(2, 3, 4, 5),
+    'page arguments' => array(2, 3, 4),
     'page callback' => 'flag_clear_unflag',
-    'access callback' => 'user_access',
-    'access arguments' => array('clear flags'),
+    'access callback' => 'flag_clear_access',
+    'access arguments' => array(3, 5),
     'description' => '',
     'type' => MENU_CALLBACK,
   );
@@ -32,9 +32,22 @@ function flag_clear_menu() {
     'title' => 'Flag Manager',
     'description' => 'Manage flags for content',
     'page callback' => 'flag_clear_manager',
+    'access callback' => 'user_access',
     'access arguments' => array('clear flags'),
   );
   return $items;
+}
+
+/*
+ * Custom user access function.
+ */
+function flag_clear_access($entity_id, $token = '') {
+  // Make sure the current user has the appropriate level of permissions.
+  if (user_access('clear flags')) {
+    // Check the token to make sure it is valid.
+    return flag_clear_verify_token($entity_id, $token);
+  }
+  return FALSE;
 }
 
 /*
@@ -101,8 +114,7 @@ function flag_clear_manager() {
 /*
 * Menu callback for completely unflagging a piece of content for all users.
 */
-function flag_clear_clear($type = NULL, $entity = NULL, $token = NULL) {
-  flag_clear_verify_token($token);
+function flag_clear_clear($type = NULL, $entity = NULL) {
   $removed = array();
   $user_flags = flag_get_entity_flags($type, $entity);
   foreach ($user_flags as $user_flag) {
@@ -132,8 +144,7 @@ function flag_clear_clear($type = NULL, $entity = NULL, $token = NULL) {
 /*
 * Menu callback for unflagging a piece of content for a specific user.
 */
-function flag_clear_unflag($flag = NULL, $entity = NULL, $uid = NULL, $token = NULL) {
-  flag_clear_verify_token($token);
+function flag_clear_unflag($flag = NULL, $entity = NULL, $uid = NULL) {
   $user = user_load($uid);
   $flag = flag_get_flag($flag);
   $flag->flag('unflag', $entity, $user, TRUE);
@@ -151,10 +162,11 @@ function flag_clear_unflag($flag = NULL, $entity = NULL, $uid = NULL, $token = N
   drupal_goto($destination);
 }
 
-function flag_clear_verify_token($token) {
-  if ($token != drupal_get_token()){
-    drupal_set_message(t('Token does not match URL Token'), 'error');
-    drupal_exit();
+function flag_clear_verify_token($entity_id, $token) {
+  $token_key = 'flag_clear:' . $entity_id;
+  if ($token != drupal_get_token($token_key)) {
+    drupal_set_message(t('Flag clearing token does not match the provided token'), 'error');
+    return FALSE;
   }
 
   return TRUE;

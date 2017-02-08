@@ -159,7 +159,8 @@ class flag_clear_handler_field_clear extends views_handler_field {
       return;
     }
 
-    $token = drupal_get_token();
+    $token_key = 'flag_clear:' . $entity_id;
+    $token = drupal_get_token($token_key);
     $current_path = current_path();
     $clear_text = $this->options['link_text'];
     $clear_query = array('destination' => $current_path);

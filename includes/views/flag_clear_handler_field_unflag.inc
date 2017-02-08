@@ -175,7 +175,8 @@ class flag_clear_handler_field_unflag extends views_handler_field {
       return t('Unflag link requires username or uid field in view output.');
     }
 
-    $token = drupal_get_token();
+    $token_key = 'flag_clear:' . $entity_id;
+    $token = drupal_get_token($token_key);
     $current_path = current_path();
     $unflag_text = $this->options['link_text'];
     $unflag_query = array('destination' => $current_path);
